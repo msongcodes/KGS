@@ -1,7 +1,7 @@
 '''
-Created on 19 Jan 2021
+Created on 27 Mar 2022
 
-@author: ejimenez-ruiz
+@author: jack-kausch, based on the original by ejimenez-ruiz
 '''
 import requests
 import json
