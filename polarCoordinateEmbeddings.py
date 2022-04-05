@@ -15,7 +15,7 @@ from sklearn.decomposition import PCA
 
 def cart2pol(x, y):
     rho = np.sqrt(x**2 + y**2)
-    phi = np.arctan2(y, x)
+    phi = np.arctan2(y, x)*(180/np.pi)
     return(rho, phi)
 
 def getEmbeddings():
@@ -54,9 +54,6 @@ def getEmbeddings():
     dataframe = pd.DataFrame(vector_array).transpose()
     print(dataframe)
     
-    #Make sure the data has proper standard deviation before analysis
-   # x = dataframe.loc[:, :].values
-   # x = StandardScaler().fit_transform(x)
     
     #Take the principle components of the vector
     pca = PCA(n_components=2)
@@ -66,16 +63,19 @@ def getEmbeddings():
              , columns = ['principal component 1', 'principal component 2'])
 
     print(principal_components_df)
-    vector_small = principal_components_df.iloc[0].tolist()
+    vector_list = []
+    for n in range(4):
+        vector_small = principal_components_df.iloc[n].tolist()
+        vector_list.append(vector_small)
 
+    polar_list = []
     #Convert the output into polar coordinate
-    polar_vector = cart2pol(vector_small[0],vector_small[1])
-    print(vector_small)
-    print(polar_vector)
+    for i in vector_list:
+        polar_vector = cart2pol(i[0],i[1])
+        polar_list.append(polar_vector)
+    print(polar_list)
 
 
-  
-    
 
 #Query pre-computed knowledge graph embeddings
 getEmbeddings()
