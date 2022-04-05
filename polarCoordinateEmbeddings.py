@@ -1,7 +1,7 @@
 '''
-Created on 27 Mar 2022
+Created on 19 Jan 2021
 
-@author: jack-kausch, based on the original by ejimenez-ruiz
+@author: ejimenez-ruiz
 '''
 import requests
 import json
@@ -22,20 +22,37 @@ def getEmbeddings():
     
     #Check http://www.kgvec2go.org/
     
-    print("\nPolar coordinate vector embedding for the resource 'Earth' (format: r, theta):")
+    print("\nPolar coordinate vector embedding for the resource %kg_entity (format: r, theta):")
     
     #http://dbpedia.org/resource/Chicago_Bulls
-    kg_entity = "Pennsylvania"
+    kg_entity = "Air"
+    kg_entity2= "Earth"
+    kg_entity3= "Fire"
+    kg_entity4= "Water"
     
-    r = requests.get('http://www.kgvec2go.org/rest/get-vector/dbpedia/' + kg_entity) 
+    
+    r = requests.get('http://www.kgvec2go.org/rest/get-vector/dbpedia/' + kg_entity)
+    print(r)
+    r2 = requests.get('http://www.kgvec2go.org/rest/get-vector/dbpedia/' + kg_entity2)
+    r3 = requests.get('http://www.kgvec2go.org/rest/get-vector/dbpedia/' + kg_entity3)
+    r4 = requests.get('http://www.kgvec2go.org/rest/get-vector/dbpedia/' + kg_entity4)
     uri = r.json()["uri"]
-    vector_big = r.json()["vector"]
+    uri2 = r2.json()["uri"]
+    uri3 = r3.json()["uri"]
+    uri4 = r4.json()["uri"]
+    v = r.json()["vector"]
+    print(v)
+    v2 = r2.json()["vector"]
+    print(v2)
+    v3 = r3.json()["vector"]
+    v4 = r4.json()["vector"]
+    vector_array=list(zip(v,v2,v3,v4))
+    print(vector_array)
+            
     
-    #We duplicate the features here because the PCA library cannot handle a single feature
-    axis = [0,1,2]
-
     #Load the vector in a dataframe
-    dataframe = pd.DataFrame([vector_big],[axis])
+    dataframe = pd.DataFrame(vector_array).transpose()
+    print(dataframe)
     
     #Make sure the data has proper standard deviation before analysis
    # x = dataframe.loc[:, :].values
@@ -48,11 +65,12 @@ def getEmbeddings():
     principal_components_df = pd.DataFrame(data = principal_components
              , columns = ['principal component 1', 'principal component 2'])
 
+    print(principal_components_df)
     vector_small = principal_components_df.iloc[0].tolist()
 
     #Convert the output into polar coordinate
     polar_vector = cart2pol(vector_small[0],vector_small[1])
-
+    print(vector_small)
     print(polar_vector)
 
 
